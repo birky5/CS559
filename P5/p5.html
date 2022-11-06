@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Programming Assignment #5</title>
+  </head>
+  <body>
+    <canvas id="observerCanvas" width="0" height="0" style="border:1px solid #888;"></canvas>
+    <canvas id="cameraCanvas" width="600" height="600" style="border:1px solid #888;"></canvas>
+    </br>
+    <input id="slider1" type="range" min="0" max="600" /> Move object along curve
+    </br>
+    <input id="slider2" type="range" min="0" max="100" /> Move camera around scene<br>
+    <label for="accept">
+      <input type="checkbox" id="checkbox" onclick="checkBoxChecked()">see path 
+   </label>
+   <label for="accept">
+    <input type="checkbox" id="check3d" onclick="check3d()">see camera 3d axes<br>
+ </label>
+    <script type="text/javascript" src="gl-matrix-min.js"></script>
+    <script src="p5.js" id="module"></script>
+  </body>
+</html>
