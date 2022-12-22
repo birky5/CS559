@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Programming Assignment #7</title>
+  </head>
+
+  <body>
+    <script id="vertexShader" type="not-js">
+        attribute vec3 vPosition;
+        attribute vec3 vNormal;
+        attribute vec3 vColor;
+        varying vec3 fPosition;
+        varying vec3 fColor;
+        varying vec3 fNormal;
+        uniform mat4 uMV;
+        uniform mat4 uMVP;
+        uniform mat3 uMVn;
+  
+        void main(void) {
+          fPosition = (uMV * vec4(vPosition, 1.0)).xyz; // In camera coordinates
+          fColor = vColor;
+          fNormal = normalize(uMVn * vNormal);
+          gl_Position = uMVP * vec4(vPosition, 1.5);                            // In local coordinates
+       }
+    </script>
+
+    <script id="fragmentShader" type="not-js">
+      precision highp float;
+      varying vec3 fPosition;
+      varying vec3 fColor;
+      varying vec3 fNormal;
+      uniform mat4 uMV;
+      uniform mat3 uMVn;
+      uniform float time;
+
+      const float ambientC  = 0.20;
+      const float diffuseC  = 0.33;
+      const float specularC = 0.32;
+      const float specularE = 32.0;
+      const vec3  lightCol  = vec3(1.0,1.0,1.0);
+      const vec3  objectCol = vec3(1.3,1.6,0.7);
+
+      const vec3 light_direction = vec3(1.0,1.0,1.0);
+
+      void main(void) {
+        float angle = 100.0;
+        vec3 light1 = vec3(sin(angle), 0.21, cos(angle));
+        vec3 light2 = vec3(cos(-angle), 0.75, sin(-angle)); 
+  
+        float diffuse1 = pow(dot(fNormal,light1),1.0);
+        float diffuse2 = pow(dot(fNormal,light2),2.0);
+  
+        vec3 color1 = diffuse1 * vec3(1,0,3);
+        vec3 color2 = diffuse2 * vec3(1,1,3);
+
+        vec3 l = normalize(light_direction * light1);
+        vec3 n = normalize(fNormal);
+        vec3 e = normalize(-fPosition);
+        vec3 h = normalize(e + l);
+
+        vec3 ambient_color = ambientC * objectCol;
+        vec3 specular_color = specularC * pow(max(0.0,dot(n,h)),specularE) * lightCol;
+
+        gl_FragColor = vec4(color1 + color2 + ambient_color + specular_color, 1.0);
+      }
+    </script>
+
+    <canvas id="mycanvas" width="500" height="500"></canvas>
+    <br>
+    <input id="slider1" type="range" min="-100" max="100" />Move Camera<br>
+    <input id="slider2" type="range" min="-100" max="100" />Rotate the triangle
+    <script type="text/javascript" src="gl-matrix-min.js"></script>
+    <script src="p7.js" id="module"></script>
+  </body>
+</html>
